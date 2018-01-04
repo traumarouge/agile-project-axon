@@ -9,12 +9,14 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.2'
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.junit.platform.gradle.plugin'
 
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.9
@@ -29,6 +31,10 @@ repositories {
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.axonframework:axon-spring-boot-starter:3.1.1')
+    compile('io.springfox:springfox-swagger2:2.7.0')
+    compile('io.springfox:springfox-swagger-ui:2.7.0')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.axonframework:axon-test:3.1.1')
+    testCompile 'org.junit.jupiter:junit-jupiter-engine:5.0.2'
+    testCompile 'org.junit.platform:junit-platform-launcher:1.0.2'
 }
