@@ -4,6 +4,8 @@ import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
 import org.axonframework.commandhandling.model.AggregateLifecycle;
 
+import org.axonframework.common.IdentifierFactory;
+
 import org.axonframework.eventsourcing.EventSourcingHandler;
 
 import org.axonframework.spring.stereotype.Aggregate;
@@ -24,12 +26,13 @@ public class Sprint {
     @CommandHandler
     public Sprint(CreateSprintCommand command) {
 
-        AggregateLifecycle.apply(new SprintCreatedEvent(command.getIdentifier(), command.getName()));
+        String identifier = IdentifierFactory.getInstance().generateIdentifier();
+        AggregateLifecycle.apply(new SprintCreatedEvent(identifier, command.getName()));
     }
 
     @EventSourcingHandler
     private void handle(SprintCreatedEvent event) {
 
-        this.identifier = event.getIdentifier();
+        identifier = event.getIdentifier();
     }
 }

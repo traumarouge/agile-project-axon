@@ -2,14 +2,22 @@ package agileproject.sprint.command.domain;
 
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
+import org.axonframework.test.matchers.Matchers;
+
+import org.hamcrest.Matcher;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
+import static org.axonframework.test.matchers.Matchers.messageWithPayload;
+import static org.axonframework.test.matchers.Matchers.sequenceOf;
+
 
 class SprintTest {
 
-    private FixtureConfiguration fixtureConfiguration;
+    private FixtureConfiguration<Sprint> fixtureConfiguration;
 
     @BeforeEach
     void setup() {
@@ -21,12 +29,26 @@ class SprintTest {
     @Test
     void createSprint() {
 
-        CreateSprintCommand createSprintCommand = new CreateSprintCommand("identifier", "sprint name");
-        SprintCreatedEvent sprintCreatedEvent = new SprintCreatedEvent("identifier", "sprint name");
+        CreateSprintCommand createSprintCommand = new CreateSprintCommand("name");
+
+        Matcher<SprintCreatedEvent> payloadMatcher = Matchers.predicate(e ->
+                    e.getName().equals("name") && isUUID(e.getIdentifier()));
 
         fixtureConfiguration.given()
             .when(createSprintCommand)
-            .expectSuccessfulHandlerExecution()
-            .expectEvents(sprintCreatedEvent);
+            .expectEventsMatching(sequenceOf(messageWithPayload(payloadMatcher)))
+            .expectReturnValueMatching(Matchers.predicate(SprintTest::isUUID));
+    }
+
+
+    private static boolean isUUID(String name) {
+
+        try {
+            UUID uuid = UUID.fromString(name);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+
+        return true;
     }
 }

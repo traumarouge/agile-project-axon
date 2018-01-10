@@ -4,8 +4,6 @@ import agileproject.sprint.command.domain.CreateSprintCommand;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
 
-import org.axonframework.common.IdentifierFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpHeaders;
@@ -17,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
-
 import java.net.URI;
+
+import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 
 @RestController
@@ -37,9 +35,7 @@ public class SprintController {
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody SprintDto sprint) {
 
-        String identifier = IdentifierFactory.getInstance().generateIdentifier();
-        CreateSprintCommand command = new CreateSprintCommand(identifier, sprint.name);
-        commandGateway.sendAndWait(command);
+        String identifier = commandGateway.sendAndWait(new CreateSprintCommand(sprint.name));
 
         URI uri = fromCurrentRequest().path("/{id}").buildAndExpand(identifier).toUri();
         HttpHeaders httpHeaders = new HttpHeaders();
