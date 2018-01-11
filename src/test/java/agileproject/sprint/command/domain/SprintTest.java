@@ -9,8 +9,6 @@ import org.hamcrest.Matcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.UUID;
-
 import static org.axonframework.test.matchers.Matchers.messageWithPayload;
 import static org.axonframework.test.matchers.Matchers.sequenceOf;
 
@@ -44,7 +42,7 @@ class SprintTest {
     private static boolean isUUID(String name) {
 
         try {
-            UUID uuid = UUID.fromString(name);
+            java.util.UUID.fromString(name);
         } catch (IllegalArgumentException e) {
             return false;
         }
