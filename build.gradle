@@ -1,6 +1,7 @@
 buildscript {
     ext {
         springBootVersion = '2.0.0.M7'
+        axonVersion = '3.1.2'
     }
     repositories {
         mavenCentral()
@@ -8,8 +9,8 @@ buildscript {
         maven { url "https://repo.spring.io/milestone" }
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.2'
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
+        classpath('org.junit.platform:junit-platform-gradle-plugin:1.0.2')
     }
 }
 
@@ -32,13 +33,13 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-actuator')
-    compile('org.axonframework:axon-spring-boot-starter:3.1.1')
+    compile("org.axonframework:axon-spring-boot-starter:$axonVersion")
     compile('com.h2database:h2')
     compile('javax.xml.bind:jaxb-api:2.3.0')
     compile('io.springfox:springfox-swagger2:2.7.0')
     compile('io.springfox:springfox-swagger-ui:2.7.0')
     testCompile('org.springframework.boot:spring-boot-starter-test')
-    testCompile('org.axonframework:axon-test:3.1.1')
+    testCompile("org.axonframework:axon-test:$axonVersion")
     testCompile('org.junit.jupiter:junit-jupiter-engine:5.0.2')
     testCompile('org.junit.platform:junit-platform-launcher:1.0.2')
     testCompileOnly('org.apiguardian:apiguardian-api:1.0.0')
