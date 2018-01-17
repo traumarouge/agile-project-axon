@@ -10,9 +10,14 @@ import org.axonframework.eventsourcing.EventSourcingHandler;
 
 import org.axonframework.spring.stereotype.Aggregate;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @Aggregate
 public class BacklogItem {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BacklogItem.class);
 
     @AggregateIdentifier
     private String identifier;
@@ -28,6 +33,8 @@ public class BacklogItem {
     public BacklogItem(CreateBacklogItemCommand command) {
 
         String identifier = IdentifierFactory.getInstance().generateIdentifier();
+
+        LOGGER.debug("Applying BacklogItemCreatedEvent: {}", identifier);
         AggregateLifecycle.apply(new BacklogItemCreatedEvent(identifier, command.getName()));
     }
 
@@ -35,6 +42,7 @@ public class BacklogItem {
     private void handle(BacklogItemCreatedEvent event) {
 
         identifier = event.getIdentifier();
+        LOGGER.debug("Handling BacklogItemCreatedEvent: {}", identifier);
     }
 
 
@@ -45,6 +53,7 @@ public class BacklogItem {
         revokePreviousCommitment();
 
         // TODO: assert that Sprint exists
+        LOGGER.debug("Applying BacklogItemCommittedEvent: {}", identifier);
         AggregateLifecycle.apply(new BacklogItemCommittedEvent(identifier, sprintIdentifier));
     }
 
@@ -62,6 +71,7 @@ public class BacklogItem {
     @EventSourcingHandler
     private void handle(BacklogItemCommittedEvent event) {
 
+        LOGGER.debug("Handling BacklogItemCommittedEvent: {}", identifier);
         sprintIdentifier = event.getSprintIdentifier();
     }
 }

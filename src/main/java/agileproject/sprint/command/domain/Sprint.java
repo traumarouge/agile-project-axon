@@ -10,9 +10,14 @@ import org.axonframework.eventsourcing.EventSourcingHandler;
 
 import org.axonframework.spring.stereotype.Aggregate;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @Aggregate
 public class Sprint {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Sprint.class);
 
     @AggregateIdentifier
     private String identifier;
@@ -27,6 +32,8 @@ public class Sprint {
     public Sprint(CreateSprintCommand command) {
 
         String identifier = IdentifierFactory.getInstance().generateIdentifier();
+
+        LOGGER.debug("Applying SprintCreatedEvent: {}", identifier);
         AggregateLifecycle.apply(new SprintCreatedEvent(identifier, command.getName()));
     }
 
@@ -34,5 +41,6 @@ public class Sprint {
     private void handle(SprintCreatedEvent event) {
 
         identifier = event.getIdentifier();
+        LOGGER.debug("Handling SprintCreatedEvent: {}", identifier);
     }
 }
