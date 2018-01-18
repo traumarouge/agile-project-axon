@@ -4,6 +4,9 @@ import agileproject.sprint.command.domain.CreateSprintCommand;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpHeaders;
@@ -24,6 +27,8 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 @RequestMapping("/sprints")
 public class SprintController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SprintController.class);
+
     private final CommandGateway commandGateway;
 
     @Autowired
@@ -34,6 +39,8 @@ public class SprintController {
 
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody SprintDto sprint) {
+
+        LOGGER.debug("Received POST request on /sprints");
 
         String identifier = commandGateway.sendAndWait(new CreateSprintCommand(sprint.name));
 

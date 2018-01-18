@@ -5,6 +5,9 @@ import agileproject.backlogitem.command.domain.CreateBacklogItemCommand;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpHeaders;
@@ -28,6 +31,8 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 @RequestMapping("/backlogitems")
 public class BacklogItemController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(BacklogItemController.class);
+
     private final CommandGateway commandGateway;
 
     @Autowired
@@ -38,6 +43,8 @@ public class BacklogItemController {
 
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody BacklogItemDto backlogItem) {
+
+        LOGGER.debug("Received POST request on /backlogitems");
 
         String identifier = commandGateway.sendAndWait(new CreateBacklogItemCommand(backlogItem.name));
 
