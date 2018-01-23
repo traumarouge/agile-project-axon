@@ -4,6 +4,7 @@ import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
 import org.axonframework.commandhandling.model.AggregateLifecycle;
 
+import org.axonframework.common.Assert;
 import org.axonframework.common.IdentifierFactory;
 
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -31,10 +32,15 @@ public class Sprint {
     @CommandHandler
     public Sprint(CreateSprintCommand command) {
 
+        Assert.notNull(command.getName(), () -> "name must not be null");
+
+        String name = command.getName().trim();
+        Assert.isFalse(name.isEmpty(), () -> "name must not be empty");
+
         String identifier = IdentifierFactory.getInstance().generateIdentifier();
 
         LOGGER.debug("Applying SprintCreatedEvent: {}", identifier);
-        AggregateLifecycle.apply(new SprintCreatedEvent(identifier, command.getName()));
+        AggregateLifecycle.apply(new SprintCreatedEvent(identifier, name));
     }
 
     @EventSourcingHandler

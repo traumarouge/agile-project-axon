@@ -39,6 +39,30 @@ class SprintTest {
     }
 
 
+    @Test
+    void createSprintFailsNameIsNull() {
+
+        CreateSprintCommand createSprintCommand = new CreateSprintCommand(null);
+
+        fixtureConfiguration.given()
+            .when(createSprintCommand)
+            .expectException(IllegalArgumentException.class)
+            .expectNoEvents();
+    }
+
+
+    @Test
+    void createSprintFailsNameIsEmpty() {
+
+        CreateSprintCommand createSprintCommand = new CreateSprintCommand("");
+
+        fixtureConfiguration.given()
+            .when(createSprintCommand)
+            .expectException(IllegalArgumentException.class)
+            .expectNoEvents();
+    }
+
+
     private static boolean isUUID(String name) {
 
         try {
