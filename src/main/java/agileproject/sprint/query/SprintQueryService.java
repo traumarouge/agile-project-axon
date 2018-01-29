@@ -12,12 +12,12 @@ import java.util.concurrent.ExecutionException;
 
 
 @Service
-public class QueryService {
+public class SprintQueryService {
 
     private final QueryGateway queryGateway;
 
     @Autowired
-    public QueryService(QueryGateway queryGateway) {
+    public SprintQueryService(QueryGateway queryGateway) {
 
         this.queryGateway = queryGateway;
     }
