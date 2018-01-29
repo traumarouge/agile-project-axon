@@ -1,7 +1,7 @@
 package agileproject.sprint.query.api;
 
+import agileproject.sprint.query.QueryService;
 import agileproject.sprint.query.Sprint;
-import agileproject.sprint.query.SprintRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +23,12 @@ public class SprintQueryApi {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SprintQueryApi.class);
 
-    private final SprintRepository sprintRepository;
+    private QueryService queryService;
 
     @Autowired
-    public SprintQueryApi(SprintRepository sprintRepository) {
+    public SprintQueryApi(QueryService queryService) {
 
-        this.sprintRepository = sprintRepository;
+        this.queryService = queryService;
     }
 
     @GetMapping("/{id}")
@@ -36,7 +36,7 @@ public class SprintQueryApi {
 
         LOGGER.debug("Received GET request on /sprints/{}", uuid);
 
-        return sprintRepository.findByUuid(uuid)
+        return queryService.sprintByUuid(uuid)
             .map(sprint -> new ResponseEntity<>(sprint, HttpStatus.OK))
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
