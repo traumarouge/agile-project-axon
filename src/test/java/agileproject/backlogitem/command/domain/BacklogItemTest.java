@@ -44,6 +44,30 @@ class BacklogItemTest {
 
 
     @Test
+    void createBacklogItemFailsNameIsNull() {
+
+        CreateBacklogItemCommand createBacklogItemCommand = new CreateBacklogItemCommand(null);
+
+        fixtureConfiguration.given()
+            .when(createBacklogItemCommand)
+            .expectException(IllegalArgumentException.class)
+            .expectNoEvents();
+    }
+
+
+    @Test
+    void createBacklogItemFailsNameIsEmpty() {
+
+        CreateBacklogItemCommand createBacklogItemCommand = new CreateBacklogItemCommand("");
+
+        fixtureConfiguration.given()
+            .when(createBacklogItemCommand)
+            .expectException(IllegalArgumentException.class)
+            .expectNoEvents();
+    }
+
+
+    @Test
     void commitBacklogItem() {
 
         BacklogItemCreatedEvent createdEvent = new BacklogItemCreatedEvent(UUID, "name");
