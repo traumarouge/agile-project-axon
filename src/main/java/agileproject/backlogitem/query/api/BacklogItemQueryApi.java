@@ -1,7 +1,7 @@
 package agileproject.backlogitem.query.api;
 
 import agileproject.backlogitem.query.BacklogItem;
-import agileproject.backlogitem.query.BacklogItemRepository;
+import agileproject.backlogitem.query.BacklogItemQueryService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +23,12 @@ public class BacklogItemQueryApi {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BacklogItemQueryApi.class);
 
-    private final BacklogItemRepository backlogItemRepository;
+    private final BacklogItemQueryService backlogItemQueryService;
 
     @Autowired
-    public BacklogItemQueryApi(BacklogItemRepository backlogItemRepository) {
+    public BacklogItemQueryApi(BacklogItemQueryService backlogItemQueryService) {
 
-        this.backlogItemRepository = backlogItemRepository;
+        this.backlogItemQueryService = backlogItemQueryService;
     }
 
     @GetMapping("/{id}")
@@ -36,8 +36,8 @@ public class BacklogItemQueryApi {
 
         LOGGER.debug("Received GET request on /backlogitems/{}", uuid);
 
-        return backlogItemRepository.findByUuid(uuid)
-            .map(entity -> new ResponseEntity<>(entity, HttpStatus.OK))
+        return backlogItemQueryService.backlogItemByUuid(uuid)
+            .map(item -> new ResponseEntity<>(item, HttpStatus.OK))
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }
