@@ -1,5 +1,7 @@
 package agileproject.backlogitem.command.domain;
 
+import agileproject.sprint.query.SprintQueryService;
+
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
 import org.axonframework.commandhandling.model.AggregateLifecycle;
@@ -53,12 +55,16 @@ public class BacklogItem {
 
 
     @CommandHandler
-    public void commit(CommitBacklogItemCommand command) {
+    public void commit(CommitBacklogItemCommand command, SprintQueryService sprintQueryService) {
 
         String sprintIdentifier = command.getSprintIdentifier();
+
+        if (!sprintQueryService.doesSprintExist(sprintIdentifier)) {
+            throw new IllegalArgumentException("Sprint does not exist: " + sprintIdentifier);
+        }
+
         revokePreviousCommitment();
 
-        // TODO: assert that Sprint exists
         LOGGER.debug("Applying BacklogItemCommittedEvent: {}", identifier);
         AggregateLifecycle.apply(new BacklogItemCommittedEvent(identifier, sprintIdentifier));
     }

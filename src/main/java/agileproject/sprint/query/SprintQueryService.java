@@ -32,4 +32,10 @@ public class SprintQueryService {
             throw new RuntimeException(e);
         }
     }
+
+
+    public boolean doesSprintExist(String uuid) {
+
+        return sprintByUuid(uuid).isPresent();
+    }
 }
