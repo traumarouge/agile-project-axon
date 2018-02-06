@@ -10,7 +10,7 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
-        classpath('org.junit.platform:junit-platform-gradle-plugin:1.0.2')
+        classpath('org.junit.platform:junit-platform-gradle-plugin:1.1.0-RC1')
     }
 }
 
@@ -40,8 +40,8 @@ dependencies {
     compile('io.springfox:springfox-swagger-ui:2.7.0')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile("org.axonframework:axon-test:$axonVersion")
-    testCompile('org.junit.jupiter:junit-jupiter-engine:5.0.2')
-    testCompile('org.junit.platform:junit-platform-launcher:1.0.2')
+    testCompile('org.junit.jupiter:junit-jupiter-engine:5.1.0-RC1')
+    testCompile('org.junit.platform:junit-platform-launcher:1.1.0-RC1')
     testCompile('org.assertj:assertj-core:3.9.0')
     testCompile('org.mockito:mockito-core:2.13.0')
     testCompileOnly('org.apiguardian:apiguardian-api:1.0.0')
