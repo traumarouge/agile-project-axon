@@ -10,6 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * For some reason (maybe a possible Axon bug), after an event tracking processor has performed an event replay, event
+ * handlers associated with the tracking processor may be invoked twice when a single event is fetched by the processor
+ * thread (see https://groups.google.com/forum/#!topic/axonframework/-ncu0jIH-vM) As a temporary solution, this message
+ * handler interceptor should be registered with the event tracking processor, in order to detect and dismiss a double
+ * tracked event.
+ */
 public class DoubleTrackedEventInterceptor implements MessageHandlerInterceptor<EventMessage<?>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DoubleTrackedEventInterceptor.class);
