@@ -2,6 +2,8 @@ package agileproject;
 
 import org.axonframework.commandhandling.SimpleCommandBus;
 
+import org.axonframework.config.EventHandlingConfiguration;
+
 import org.axonframework.messaging.interceptors.BeanValidationInterceptor;
 
 import org.slf4j.Logger;
@@ -22,5 +24,14 @@ public class AxonConfig {
 
         LOGGER.debug("Register dispatch interceptor {}", BeanValidationInterceptor.class);
         simpleCommandBus.registerDispatchInterceptor(new BeanValidationInterceptor<>());
+    }
+
+
+    @Autowired
+    public void registerTrackingProcessors(EventHandlingConfiguration eventHandlingConfiguration) {
+
+        final String processorName = "SprintEventTrackingProcessor";
+        eventHandlingConfiguration.registerTrackingProcessor(processorName)
+            .registerHandlerInterceptor(processorName, conf -> new DoubleTrackedEventInterceptor());
     }
 }
