@@ -43,8 +43,21 @@ public class Sprint {
         AggregateLifecycle.apply(new SprintCreatedEvent(identifier, name));
     }
 
+    @CommandHandler
+    public void handle(RenameSprintCommand command) {
+
+        Assert.notNull(command.getName(), () -> "name must not be null");
+
+        String name = command.getName().trim();
+        Assert.isFalse(name.isEmpty(), () -> "name must not be empty");
+
+        LOGGER.debug("Applying SprintRenamedEvent: {}", identifier);
+        AggregateLifecycle.apply(new SprintRenamedEvent(identifier, name));
+    }
+
+
     @EventSourcingHandler
-    private void handle(SprintCreatedEvent event) {
+    private void on(SprintCreatedEvent event) {
 
         identifier = event.getIdentifier();
         LOGGER.debug("Handling SprintCreatedEvent: {}", identifier);

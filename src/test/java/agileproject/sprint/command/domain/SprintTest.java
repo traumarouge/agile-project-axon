@@ -15,6 +15,8 @@ import static org.axonframework.test.matchers.Matchers.sequenceOf;
 
 class SprintTest {
 
+    private static final String UUID = java.util.UUID.randomUUID().toString();
+
     private FixtureConfiguration<Sprint> fixtureConfiguration;
 
     @BeforeEach
@@ -58,6 +60,46 @@ class SprintTest {
 
         fixtureConfiguration.given()
             .when(createSprintCommand)
+            .expectException(IllegalArgumentException.class)
+            .expectNoEvents();
+    }
+
+
+    @Test
+    void renameSprint() {
+
+        SprintCreatedEvent createdEvent = new SprintCreatedEvent(UUID, "name");
+        RenameSprintCommand renameCommand = new RenameSprintCommand(UUID, "other");
+        SprintRenamedEvent renamedEvent = new SprintRenamedEvent(UUID, "other");
+
+        fixtureConfiguration.given(createdEvent)
+            .when(renameCommand)
+            .expectSuccessfulHandlerExecution()
+            .expectEvents(renamedEvent);
+    }
+
+
+    @Test
+    void renameSprintFailsNameIsNull() {
+
+        SprintCreatedEvent createdEvent = new SprintCreatedEvent(UUID, "name");
+        RenameSprintCommand renameCommand = new RenameSprintCommand(UUID, null);
+
+        fixtureConfiguration.given(createdEvent)
+            .when(renameCommand)
+            .expectException(IllegalArgumentException.class)
+            .expectNoEvents();
+    }
+
+
+    @Test
+    void renameSprintFailsNameIsEmpty() {
+
+        SprintCreatedEvent createdEvent = new SprintCreatedEvent(UUID, "name");
+        RenameSprintCommand renameCommand = new RenameSprintCommand(UUID, "");
+
+        fixtureConfiguration.given(createdEvent)
+            .when(renameCommand)
             .expectException(IllegalArgumentException.class)
             .expectNoEvents();
     }

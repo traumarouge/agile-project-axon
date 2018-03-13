@@ -1,6 +1,7 @@
 package agileproject.sprint.query;
 
 import agileproject.sprint.command.domain.SprintCreatedEvent;
+import agileproject.sprint.command.domain.SprintRenamedEvent;
 
 import org.axonframework.eventhandling.EventHandler;
 
@@ -29,7 +30,7 @@ public class SprintEventListener {
     }
 
     @EventHandler
-    public void handle(SprintCreatedEvent event) {
+    public void on(SprintCreatedEvent event) {
 
         LOGGER.debug("Handling SprintCreatedEvent: {}", event.getIdentifier());
 
@@ -38,5 +39,16 @@ public class SprintEventListener {
         sprint.setName(event.getName());
 
         sprintRepository.save(sprint);
+    }
+
+
+    @EventHandler
+    public void on(SprintRenamedEvent event) {
+
+        LOGGER.debug("Handling SprintRenamedEvent: {}", event.getIdentifier());
+
+        sprintRepository.findByUuid(event.getIdentifier())
+            .orElseThrow(IllegalStateException::new)
+            .setName(event.getName());
     }
 }
