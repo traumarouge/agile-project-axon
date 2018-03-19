@@ -1,6 +1,7 @@
 package agileproject.backlogitem.query;
 
 import agileproject.backlogitem.command.domain.BacklogItemCreatedEvent;
+import agileproject.backlogitem.command.domain.BacklogItemRenamedEvent;
 
 import org.axonframework.eventhandling.EventHandler;
 
@@ -29,7 +30,7 @@ public class BacklogItemEventListener {
     }
 
     @EventHandler
-    public void handle(BacklogItemCreatedEvent event) {
+    public void on(BacklogItemCreatedEvent event) {
 
         LOGGER.debug("Handling BacklogItemCreatedEvent: {}", event.getIdentifier());
 
@@ -38,5 +39,16 @@ public class BacklogItemEventListener {
         backlogItem.setName(event.getName());
 
         backlogItemRepository.save(backlogItem);
+    }
+
+
+    @EventHandler
+    public void on(BacklogItemRenamedEvent event) {
+
+        LOGGER.debug("Handling BacklogItemRenamedEvent: {}", event.getIdentifier());
+
+        backlogItemRepository.findByUuid(event.getIdentifier())
+            .orElseThrow(IllegalStateException::new)
+            .setName(event.getName());
     }
 }

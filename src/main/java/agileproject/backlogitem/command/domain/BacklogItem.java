@@ -46,8 +46,21 @@ public class BacklogItem {
         AggregateLifecycle.apply(new BacklogItemCreatedEvent(identifier, name));
     }
 
+    @CommandHandler
+    public void handle(RenameBacklogItemCommand command) {
+
+        Assert.notNull(command.getName(), () -> "name must not be null");
+
+        String name = command.getName().trim();
+        Assert.isFalse(name.isEmpty(), () -> "name must not be empty");
+
+        LOGGER.debug("Applying BacklogItemRenamedEvent: {}", identifier);
+        AggregateLifecycle.apply(new BacklogItemRenamedEvent(identifier, name));
+    }
+
+
     @EventSourcingHandler
-    private void handle(BacklogItemCreatedEvent event) {
+    private void on(BacklogItemCreatedEvent event) {
 
         identifier = event.getIdentifier();
         LOGGER.debug("Handling BacklogItemCreatedEvent: {}", identifier);
@@ -81,7 +94,7 @@ public class BacklogItem {
 
 
     @EventSourcingHandler
-    private void handle(BacklogItemCommittedEvent event) {
+    private void on(BacklogItemCommittedEvent event) {
 
         LOGGER.debug("Handling BacklogItemCommittedEvent: {}", identifier);
         sprintIdentifier = event.getSprintIdentifier();

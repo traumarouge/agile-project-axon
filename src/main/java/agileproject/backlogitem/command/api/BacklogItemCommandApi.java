@@ -2,6 +2,7 @@ package agileproject.backlogitem.command.api;
 
 import agileproject.backlogitem.command.domain.CommitBacklogItemCommand;
 import agileproject.backlogitem.command.domain.CreateBacklogItemCommand;
+import agileproject.backlogitem.command.domain.RenameBacklogItemCommand;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
 
@@ -29,14 +30,14 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 
 @RestController
 @RequestMapping("/backlogitems")
-public class BacklogItemController {
+public class BacklogItemCommandApi {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BacklogItemController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BacklogItemCommandApi.class);
 
     private final CommandGateway commandGateway;
 
     @Autowired
-    public BacklogItemController(CommandGateway commandGateway) {
+    public BacklogItemCommandApi(CommandGateway commandGateway) {
 
         this.commandGateway = commandGateway;
     }
@@ -53,6 +54,16 @@ public class BacklogItemController {
         httpHeaders.setLocation(uri);
 
         return new ResponseEntity<>(httpHeaders, HttpStatus.CREATED);
+    }
+
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void rename(@PathVariable("id") String identifier, @RequestBody BacklogItemDto backlogItem) {
+
+        LOGGER.debug("Received PUT request on /backlogitems/{}", identifier);
+
+        commandGateway.sendAndWait(new RenameBacklogItemCommand(identifier, backlogItem.name));
     }
 
 

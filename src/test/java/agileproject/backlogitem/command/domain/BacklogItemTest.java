@@ -128,6 +128,46 @@ class BacklogItemTest {
     }
 
 
+    @Test
+    void renameBacklogItem() {
+
+        BacklogItemCreatedEvent createdEvent = new BacklogItemCreatedEvent(UUID, "name");
+        RenameBacklogItemCommand renameCommand = new RenameBacklogItemCommand(UUID, "other");
+        BacklogItemRenamedEvent renamedEvent = new BacklogItemRenamedEvent(UUID, "other");
+
+        fixtureConfiguration.given(createdEvent)
+            .when(renameCommand)
+            .expectSuccessfulHandlerExecution()
+            .expectEvents(renamedEvent);
+    }
+
+
+    @Test
+    void renameBacklogItemFailsNameIsNull() {
+
+        BacklogItemCreatedEvent createdEvent = new BacklogItemCreatedEvent(UUID, "name");
+        RenameBacklogItemCommand renameCommand = new RenameBacklogItemCommand(UUID, null);
+
+        fixtureConfiguration.given(createdEvent)
+            .when(renameCommand)
+            .expectException(IllegalArgumentException.class)
+            .expectNoEvents();
+    }
+
+
+    @Test
+    void renameBacklogItemFailsNameIsEmpty() {
+
+        BacklogItemCreatedEvent createdEvent = new BacklogItemCreatedEvent(UUID, "name");
+        RenameBacklogItemCommand renameCommand = new RenameBacklogItemCommand(UUID, "");
+
+        fixtureConfiguration.given(createdEvent)
+            .when(renameCommand)
+            .expectException(IllegalArgumentException.class)
+            .expectNoEvents();
+    }
+
+
     private static boolean isUUID(String name) {
 
         try {
