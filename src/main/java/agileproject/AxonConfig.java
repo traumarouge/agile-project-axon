@@ -30,8 +30,6 @@ public class AxonConfig {
     @Autowired
     public void registerTrackingProcessors(EventHandlingConfiguration eventHandlingConfiguration) {
 
-        final String processorName = "SprintEventTrackingProcessor";
-        eventHandlingConfiguration.registerTrackingProcessor(processorName)
-            .registerHandlerInterceptor(processorName, conf -> new DoubleTrackedEventInterceptor());
+        eventHandlingConfiguration.registerTrackingProcessor("SprintEventTrackingProcessor");
     }
 }
