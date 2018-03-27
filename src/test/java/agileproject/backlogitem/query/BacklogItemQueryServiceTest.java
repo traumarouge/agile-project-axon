@@ -1,8 +1,11 @@
 package agileproject.backlogitem.query;
 
 import org.axonframework.queryhandling.QueryGateway;
+import org.axonframework.queryhandling.responsetypes.ResponseType;
 
 import org.junit.jupiter.api.Test;
+
+import org.mockito.ArgumentMatchers;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -10,6 +13,8 @@ import java.util.concurrent.CompletableFuture;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import static org.mockito.ArgumentMatchers.eq;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -25,7 +30,8 @@ class BacklogItemQueryServiceTest {
 
         QueryGateway queryGateway = mock(QueryGateway.class);
         CompletableFuture<BacklogItem> future = CompletableFuture.completedFuture(backlogItem);
-        when(queryGateway.send(query, "BacklogItemByUuid", BacklogItem.class)).thenReturn(future);
+        when(queryGateway.query(eq("BacklogItemByUuid"), eq(query), ArgumentMatchers.<ResponseType<BacklogItem>>any()))
+            .thenReturn(future);
 
         BacklogItemQueryService sut = new BacklogItemQueryService(queryGateway);
         Optional<BacklogItem> optional = sut.backlogItemByUuid("backlogItem-uuid");
@@ -40,7 +46,8 @@ class BacklogItemQueryServiceTest {
 
         QueryGateway queryGateway = mock(QueryGateway.class);
         CompletableFuture<BacklogItem> future = CompletableFuture.completedFuture(null);
-        when(queryGateway.send(query, "BacklogItemByUuid", BacklogItem.class)).thenReturn(future);
+        when(queryGateway.query(eq("BacklogItemByUuid"), eq(query), ArgumentMatchers.<ResponseType<BacklogItem>>any()))
+            .thenReturn(future);
 
         BacklogItemQueryService sut = new BacklogItemQueryService(queryGateway);
         Optional<BacklogItem> optional = sut.backlogItemByUuid("backlogItem-uuid");

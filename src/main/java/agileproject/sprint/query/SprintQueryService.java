@@ -1,6 +1,8 @@
 package agileproject.sprint.query;
 
 import org.axonframework.queryhandling.QueryGateway;
+import org.axonframework.queryhandling.responsetypes.ResponseType;
+import org.axonframework.queryhandling.responsetypes.ResponseTypes;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,7 +26,8 @@ public class SprintQueryService {
 
     public Optional<Sprint> sprintByUuid(String uuid) {
 
-        CompletableFuture<Sprint> future = queryGateway.send(uuid, "SprintByUuid", Sprint.class);
+        ResponseType<Sprint> responseType = ResponseTypes.instanceOf(Sprint.class);
+        CompletableFuture<Sprint> future = queryGateway.query("SprintByUuid", uuid, responseType);
 
         try {
             return Optional.ofNullable(future.get());

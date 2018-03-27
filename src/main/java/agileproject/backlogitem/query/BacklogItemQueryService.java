@@ -1,6 +1,8 @@
 package agileproject.backlogitem.query;
 
 import org.axonframework.queryhandling.QueryGateway;
+import org.axonframework.queryhandling.responsetypes.ResponseType;
+import org.axonframework.queryhandling.responsetypes.ResponseTypes;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,7 +26,8 @@ public class BacklogItemQueryService {
 
     public Optional<BacklogItem> backlogItemByUuid(String uuid) {
 
-        CompletableFuture<BacklogItem> future = queryGateway.send(uuid, "BacklogItemByUuid", BacklogItem.class);
+        ResponseType<BacklogItem> responseType = ResponseTypes.instanceOf(BacklogItem.class);
+        CompletableFuture<BacklogItem> future = queryGateway.query("BacklogItemByUuid", uuid, responseType);
 
         try {
             return Optional.ofNullable(future.get());
