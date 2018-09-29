@@ -2,7 +2,7 @@ package agileproject;
 
 import org.axonframework.commandhandling.SimpleCommandBus;
 
-import org.axonframework.config.EventHandlingConfiguration;
+import org.axonframework.config.EventProcessingConfiguration;
 
 import org.axonframework.messaging.interceptors.BeanValidationInterceptor;
 
@@ -28,8 +28,11 @@ public class AxonConfig {
 
 
     @Autowired
-    public void registerTrackingProcessors(EventHandlingConfiguration eventHandlingConfiguration) {
+    public void registerTrackingProcessors(EventProcessingConfiguration eventProcessingConfiguration) {
 
-        eventHandlingConfiguration.registerTrackingProcessor("SprintEventTrackingProcessor");
+        String processorName = "SprintEventTrackingProcessor";
+
+        LOGGER.debug("Register tracking event processor {}", processorName);
+        eventProcessingConfiguration.registerTrackingEventProcessor(processorName);
     }
 }

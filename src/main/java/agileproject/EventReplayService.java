@@ -1,6 +1,6 @@
 package agileproject;
 
-import org.axonframework.config.EventHandlingConfiguration;
+import org.axonframework.config.EventProcessingConfiguration;
 
 import org.axonframework.eventhandling.tokenstore.TokenStore;
 
@@ -20,13 +20,13 @@ public class EventReplayService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EventReplayService.class);
 
-    private final EventHandlingConfiguration eventHandlingConfiguration;
+    private final EventProcessingConfiguration eventProcessingConfiguration;
     private final TokenStore tokenStore;
 
     @Autowired
-    public EventReplayService(EventHandlingConfiguration eventHandlingConfiguration, TokenStore tokenStore) {
+    public EventReplayService(EventProcessingConfiguration eventProcessingConfiguration, TokenStore tokenStore) {
 
-        this.eventHandlingConfiguration = eventHandlingConfiguration;
+        this.eventProcessingConfiguration = eventProcessingConfiguration;
         this.tokenStore = tokenStore;
     }
 
@@ -34,7 +34,7 @@ public class EventReplayService {
 
         LOGGER.info("Replaying events on processor '{}'", processorName);
 
-        eventHandlingConfiguration.getProcessor(processorName).ifPresentOrElse(processor -> {
+        eventProcessingConfiguration.eventProcessor(processorName).ifPresentOrElse(processor -> {
                 processor.shutDown();
                 tokenStore.fetchToken(processorName, 0); // claims token
                 tokenStore.storeToken(null, processorName, 0);
