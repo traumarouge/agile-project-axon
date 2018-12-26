@@ -23,7 +23,7 @@ sourceCompatibility = 1.11
 targetCompatibility = 1.11
 
 version = '0.0.1-SNAPSHOT'
-ext.axonVersion = '3.3.6'
+ext.axonVersion = '3.4.2'
 
 compileJava {
     options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked' << '-parameters'
